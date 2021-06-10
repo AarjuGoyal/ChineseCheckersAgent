@@ -1,0 +1,1952 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf600
+{\fonttbl\f0\fnil\fcharset0 Menlo-Italic;\f1\fnil\fcharset0 Menlo-Regular;\f2\fnil\fcharset0 Menlo-Bold;
+}
+{\colortbl;\red255\green255\blue255;\red108\green121\blue134;\red31\green31\blue36;\red255\green255\blue255;
+\red253\green143\blue63;\red252\green106\blue93;\red252\green95\blue163;\red122\green200\blue182;\red150\green134\blue245;
+\red153\green232\blue213;\red145\green212\blue98;\red174\green243\blue125;}
+{\*\expandedcolortbl;;\csgenericrgb\c42394\c47462\c52518;\csgenericrgb\c12054\c12284\c14131;\csgenericrgb\c100000\c100000\c100000;
+\csgenericrgb\c99131\c56076\c24611;\csgenericrgb\c98912\c41558\c36568;\csgenericrgb\c98839\c37355\c63833;\csgenericrgb\c47716\c78607\c71403;\csgenericrgb\c58752\c52717\c95948;
+\csgenericrgb\c59926\c90967\c83488;\csgenericrgb\c56799\c83212\c38450;\csgenericrgb\c68215\c95290\c48909;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww28600\viewh17500\viewkind0
+\deftab593
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+
+\f0\i\fs24 \cf2 \cb3 //
+\f1\i0 \cf4 \
+
+\f0\i \cf2 //  main.cpp
+\f1\i0 \cf4 \
+
+\f0\i \cf2 //  homework.cpp
+\f1\i0 \cf4 \
+
+\f0\i \cf2 //
+\f1\i0 \cf4 \
+
+\f0\i \cf2 //  Created by Aarju Goyal on 10/10/19.
+\f1\i0 \cf4 \
+
+\f0\i \cf2 //  Copyright \'a9 2019 Aarju Goyal. All rights reserved.
+\f1\i0 \cf4 \
+
+\f0\i \cf2 //
+\f1\i0 \cf4 \
+\
+\
+\cf5 #include \cf6 <iostream>\cf4 \
+\cf5 #include \cf6 <fstream>\cf4 \
+\cf5 #include \cf6 <algorithm>\cf4 \
+
+\f2\b \cf7 using
+\f1\b0 \cf4  
+\f2\b \cf7 namespace
+\f1\b0 \cf4  \cf8 std\cf4 ;\
+\cf5 #include \cf6 <string.h>\cf4 \
+\cf5 #include \cf6 <vector>\cf4 \
+\cf5 #define board_size \cf9 16\cf4 \
+\cf5 #define number_of_pieces \cf9 19\cf4 \
+
+\f2\b \cf7 char
+\f1\b0 \cf4  board[\cf5 board_size\cf4 ][\cf5 board_size\cf4 ];\
+
+\f2\b \cf7 typedef
+\f1\b0 \cf4  
+\f2\b \cf7 int
+\f1\b0 \cf4  utility_value;\
+\
+
+\f2\b \cf7 const
+\f1\b0 \cf4  
+\f2\b \cf7 int
+\f1\b0 \cf4  infinity = \cf8 numeric_limits\cf4 <
+\f2\b \cf7 int
+\f1\b0 \cf4 >::\cf10 max\cf4 ();\
+
+\f2\b \cf7 const
+\f1\b0 \cf4  
+\f2\b \cf7 int
+\f1\b0 \cf4  neg_infinity = \cf8 numeric_limits\cf4 <
+\f2\b \cf7 int
+\f1\b0 \cf4 >::\cf10 min\cf4 ();\
+\cf5 #define nodes_to_be_expanded \cf9 100\cf4 \
+\cf5 #define maximum_depth \cf9 5\cf4 \
+
+\f0\i \cf2 /*struct Turn_Color\{
+\f1\i0 \cf4 \
+
+\f0\i \cf2     char color;
+\f1\i0 \cf4 \
+
+\f0\i \cf2     
+\f1\i0 \cf4 \
+
+\f0\i \cf2     Turn_Color(char given_turn)
+\f1\i0 \cf4 \
+
+\f0\i \cf2     \{
+\f1\i0 \cf4 \
+
+\f0\i \cf2         color = given_turn;
+\f1\i0 \cf4 \
+
+\f0\i \cf2     \}
+\f1\i0 \cf4 \
+
+\f0\i \cf2     void turn_change()
+\f1\i0 \cf4 \
+
+\f0\i \cf2     \{
+\f1\i0 \cf4 \
+
+\f0\i \cf2         if(color == 'B')
+\f1\i0 \cf4 \
+
+\f0\i \cf2             color = 'W';
+\f1\i0 \cf4 \
+
+\f0\i \cf2         else if(color == 'W')
+\f1\i0 \cf4 \
+
+\f0\i \cf2             color = 'B';
+\f1\i0 \cf4 \
+
+\f0\i \cf2     \}
+\f1\i0 \cf4 \
+
+\f0\i \cf2 \} typedef Turn_Color;*/
+\f1\i0 \cf4 \
+
+\f2\b \cf7 struct
+\f1\b0 \cf4  position\
+\{\
+    
+\f2\b \cf7 int
+\f1\b0 \cf4  X_pos;\
+    
+\f2\b \cf7 int
+\f1\b0 \cf4  Y_pos;\
+    position(
+\f2\b \cf7 int
+\f1\b0 \cf4  given_X_pos=\cf9 0\cf4 ,
+\f2\b \cf7 int
+\f1\b0 \cf4  given_Y_pos = \cf9 0\cf4 )\
+    \{\
+        \cf11 X_pos\cf4  = given_X_pos;\
+        \cf11 Y_pos\cf4  = given_Y_pos;\
+    \}\
+    
+\f2\b \cf7 void
+\f1\b0 \cf4  print()\
+    \{\
+        \cf8 cout\cf4 <<\cf6 "X_pos: "\cf4 <<
+\f2\b \cf7 this
+\f1\b0 \cf4 ->\cf11 X_pos\cf4 <<\cf6 " Y_pos: "\cf4 <<
+\f2\b \cf7 this
+\f1\b0 \cf4 ->\cf11 Y_pos\cf4 ;\
+    \}\
+    
+\f2\b \cf7 bool
+\f1\b0 \cf4  isEqual(\cf11 position\cf4  somePos)\
+    \{\
+        
+\f2\b \cf7 if
+\f1\b0 \cf4 (
+\f2\b \cf7 this
+\f1\b0 \cf4 ->\cf11 X_pos\cf4  == somePos.\cf11 X_pos\cf4  && 
+\f2\b \cf7 this
+\f1\b0 \cf4 ->\cf11 Y_pos\cf4  == somePos.\cf11 Y_pos\cf4 )\
+            
+\f2\b \cf7 return
+\f1\b0 \cf4  
+\f2\b \cf7 true
+\f1\b0 \cf4 ;\
+        
+\f2\b \cf7 else
+\f1\b0 \cf4 \
+            
+\f2\b \cf7 return
+\f1\b0 \cf4  
+\f2\b \cf7 false
+\f1\b0 \cf4 ;\
+            \
+    \}\
+\} 
+\f2\b \cf7 typedef
+\f1\b0 \cf4  position;\
+\
+
+\f2\b \cf7 struct
+\f1\b0 \cf4  next_move\
+\{\
+    \cf11 position\cf4  initial;\
+    \cf11 position\cf4  next;\
+    
+\f2\b \cf7 char
+\f1\b0 \cf4  type;\
+    
+\f2\b \cf7 void
+\f1\b0 \cf4  print_move()\
+    \{\
+        \cf8 cout\cf4 <<\cf11 type\cf4 <<\cf6 " "\cf4 ;\
+        \cf11 initial\cf4 .\cf12 print\cf4 ();\
+        \cf8 cout\cf4 <<\cf6 " to "\cf4 ;\
+        \cf11 next\cf4 .\cf12 print\cf4 ();\
+        \cf8 cout\cf4 <<\cf10 endl\cf4 ;\
+    \}\
+\} 
+\f2\b \cf7 typedef
+\f1\b0 \cf4  next_move;\
+\
+
+\f2\b \cf7 struct
+\f1\b0 \cf4  absolute_move\
+\{\
+    \cf11 position\cf4  starting_pos;\
+    \cf11 position\cf4  final_pos;\
+    \cf8 vector\cf4 <\cf11 next_move\cf4 > intermediate_moves;\
+    \
+    \
+    \cf11 utility_value\cf4  move_priority;\
+    
+\f2\b \cf7 void
+\f1\b0 \cf4  print_absolute_move()\
+    \{\
+        \cf11 starting_pos\cf4 .\cf12 print\cf4 ();\
+        \cf8 cout\cf4 <<\cf6 " to "\cf4 ;\
+        \cf11 final_pos\cf4 .\cf12 print\cf4 ();\
+        \cf8 cout\cf4 <<\cf10 endl\cf4 ;\
+        
+\f2\b \cf7 for
+\f1\b0 \cf4 (\cf8 vector\cf4 <\cf11 next_move\cf4 >::\cf8 iterator\cf4  it = \cf11 intermediate_moves\cf4 .\cf10 begin\cf4 (); it!= \cf11 intermediate_moves\cf4 .\cf10 end\cf4 (); it++)\
+        \{\
+            it->\cf12 print_move\cf4 ();\
+        \}\
+        \cf8 cout\cf4 <<\cf10 endl\cf4 ;\
+    \}\
+\} 
+\f2\b \cf7 typedef
+\f1\b0 \cf4  absolute_move;\
+
+\f2\b \cf7 struct
+\f1\b0 \cf4  move_prioritiser\
+\{\
+    
+\f2\b \cf7 bool
+\f1\b0 \cf4  
+\f2\b \cf7 operator
+\f1\b0 \cf4 ()(
+\f2\b \cf7 const
+\f1\b0 \cf4  \cf11 absolute_move\cf4 & a,
+\f2\b \cf7 const
+\f1\b0 \cf4  \cf11 absolute_move\cf4 & b) 
+\f2\b \cf7 const
+\f1\b0 \cf4 \
+    \{\
+        
+\f2\b \cf7 return
+\f1\b0 \cf4  a.\cf11 move_priority\cf4 <b.\cf11 move_priority\cf4 ;\
+    \}\
+\};\
+\
+
+\f0\i \cf2 //This checks if the position is withhin own camp
+\f1\i0 \cf4 \
+
+\f2\b \cf7 bool
+\f1\b0 \cf4  inside_own_camp_checker(\cf11 position\cf4  piece_pos, 
+\f2\b \cf7 char
+\f1\b0 \cf4  current_turn_color)\
+\{\
+    
+\f0\i \cf2 //cout<<"\\nThis function checks if the position is inside camp for color piece "<<current_turn_color;
+\f1\i0 \cf4 \
+    
+\f2\b \cf7 if
+\f1\b0 \cf4 (current_turn_color == \cf9 'B'\cf4  && !(piece_pos.\cf11 X_pos\cf4  == \cf9 5\cf4  || piece_pos.\cf11 Y_pos\cf4 ==\cf9 5\cf4 ) && piece_pos.\cf11 X_pos\cf4  + piece_pos.\cf11 Y_pos\cf4  <=\cf9 5\cf4 )\
+    \{\
+        
+\f0\i \cf2 //cout<<"\\nThis position is inside the camp ";
+\f1\i0 \cf4 \
+        
+\f0\i \cf2 //piece_pos.print();
+\f1\i0 \cf4 \
+        \
+        
+\f2\b \cf7 return
+\f1\b0 \cf4  
+\f2\b \cf7 true
+\f1\b0 \cf4 ;\
+    \}\
+    
+\f2\b \cf7 else
+\f1\b0 \cf4  
+\f2\b \cf7 if
+\f1\b0 \cf4 (current_turn_color == \cf9 'W'\cf4  && !(piece_pos.\cf11 X_pos\cf4  == \cf9 10\cf4  || piece_pos.\cf11 Y_pos\cf4 ==\cf9 10\cf4 ) && piece_pos.\cf11 X_pos\cf4  + piece_pos.\cf11 Y_pos\cf4  >=\cf9 25\cf4 )\
+    \{\
+        
+\f0\i \cf2 //cout<<"\\nThis position is inside the camp ";
+\f1\i0 \cf4 \
+        
+\f0\i \cf2 //piece_pos.print();
+\f1\i0 \cf4 \
+        
+\f2\b \cf7 return
+\f1\b0 \cf4  
+\f2\b \cf7 true
+\f1\b0 \cf4 ;\
+    \}\
+    
+\f2\b \cf7 else
+\f1\b0 \cf4 \
+        
+\f2\b \cf7 return
+\f1\b0 \cf4  
+\f2\b \cf7 false
+\f1\b0 \cf4 ;\
+\}\
+
+\f2\b \cf7 bool
+\f1\b0 \cf4  moving_away_corner_checker(\cf11 absolute_move\cf4  piece_move, 
+\f2\b \cf7 char
+\f1\b0 \cf4  current_turn_color)\
+\{\
+    
+\f2\b \cf7 if
+\f1\b0 \cf4 (current_turn_color == \cf9 'B'\cf4  &&  (piece_move.\cf11 final_pos\cf4 .\cf11 X_pos\cf4  - piece_move.\cf11 starting_pos\cf4 .\cf11 X_pos\cf4 )>=\cf9 0\cf4  && (piece_move.\cf11 final_pos\cf4 .\cf11 Y_pos\cf4  - piece_move.\cf11 starting_pos\cf4 .\cf11 Y_pos\cf4 )>= \cf9 0\cf4  )\
+        
+\f2\b \cf7 return
+\f1\b0 \cf4  
+\f2\b \cf7 true
+\f1\b0 \cf4 ;\
+    
+\f2\b \cf7 else
+\f1\b0 \cf4  
+\f2\b \cf7 if
+\f1\b0 \cf4  (current_turn_color == \cf9 'W'\cf4  &&  (piece_move.\cf11 starting_pos\cf4 .\cf11 X_pos\cf4  - piece_move.\cf11 final_pos\cf4 .\cf11 X_pos\cf4 )>=\cf9 0\cf4  && (piece_move.\cf11 starting_pos\cf4 .\cf11 Y_pos\cf4  - piece_move.\cf11 final_pos\cf4 .\cf11 Y_pos\cf4 )>= \cf9 0\cf4  )\
+        
+\f2\b \cf7 return
+\f1\b0 \cf4  
+\f2\b \cf7 true
+\f1\b0 \cf4 ;\
+    
+\f2\b \cf7 else
+\f1\b0 \cf4 \
+        
+\f2\b \cf7 return
+\f1\b0 \cf4  
+\f2\b \cf7 false
+\f1\b0 \cf4 ;\
+    \
+\}\
+
+\f2\b \cf7 int
+\f1\b0 \cf4  closeness_to_goal_corner(\cf11 position\cf4  piece_pos, 
+\f2\b \cf7 char
+\f1\b0 \cf4  current_turn_color)\
+\{\
+    
+\f2\b \cf7 int
+\f1\b0 \cf4  man_dist_corner=\cf9 0\cf4 ;\
+    
+\f2\b \cf7 if
+\f1\b0 \cf4 (current_turn_color == \cf9 'B'\cf4 )\
+    \{\
+        man_dist_corner = (\cf9 15\cf4  - piece_pos.\cf11 X_pos\cf4 ) + (\cf9 15\cf4  - piece_pos.\cf11 Y_pos\cf4 );\
+    \}\
+    
+\f2\b \cf7 else
+\f1\b0 \cf4  
+\f2\b \cf7 if
+\f1\b0 \cf4 (current_turn_color == \cf9 'W'\cf4 )\
+    \{\
+        man_dist_corner = piece_pos.\cf11 X_pos\cf4  + piece_pos.\cf11 Y_pos\cf4 ;\
+    \}\
+    
+\f2\b \cf7 return
+\f1\b0 \cf4  man_dist_corner;\
+\}\
+
+\f0\i \cf2 //This function goes through all moves of the pieces and sees if they are moving out or moving away from corner
+\f1\i0 \cf4 \
+
+\f0\i \cf2 //**********----------------To be updated
+\f1\i0 \cf4 \
+\cf8 vector\cf4 <\cf11 absolute_move\cf4 > Move_checker(\cf8 vector\cf4 <\cf11 absolute_move\cf4 > piece_moves, 
+\f2\b \cf7 char
+\f1\b0 \cf4  current_turn_color) 
+\f0\i \cf2 //accroding to homework rules
+\f1\i0 \cf4 \
+\{\
+    \cf8 vector\cf4 <\cf11 absolute_move\cf4 > moving_out_camp;\
+    \cf8 vector\cf4 <\cf11 absolute_move\cf4 > moving_away_corner_inside_camp;\
+    \cf8 vector\cf4 <\cf11 absolute_move\cf4 > other_moves;\
+    
+\f0\i \cf2 //For each piece, this will see all the moves and see which of them are moving outside camp and which are just moving away from corner. Rest are only necessary if nothing is possible
+\f1\i0 \cf4 \
+    
+\f2\b \cf7 for
+\f1\b0 \cf4 (\cf8 vector\cf4 <\cf11 absolute_move\cf4 >::\cf8 iterator\cf4  it=piece_moves.\cf10 begin\cf4 (); it!= piece_moves.\cf10 end\cf4 (); ++it)\
+    \{\
+        
+\f2\b \cf7 if
+\f1\b0 \cf4 (\cf12 inside_own_camp_checker\cf4 (it->\cf11 starting_pos\cf4 , current_turn_color))\
+        \{\
+            
+\f2\b \cf7 if
+\f1\b0 \cf4 (!\cf12 inside_own_camp_checker\cf4 (it->\cf11 final_pos\cf4 , current_turn_color)) 
+\f0\i \cf2 //If initially inside camp and moving away
+\f1\i0 \cf4 \
+            \{\
+                
+\f0\i \cf2 //it->move_check_prioirty = 500;
+\f1\i0 \cf4 \
+                
+\f0\i \cf2 //cout<<"This move is moving out of camp";
+\f1\i0 \cf4 \
+                
+\f0\i \cf2 //it->print_absolute_move();
+\f1\i0 \cf4 \
+                moving_out_camp.\cf10 push_back\cf4 (*it);\
+            \}\
+            
+\f2\b \cf7 else
+\f1\b0 \cf4  
+\f2\b \cf7 if
+\f1\b0 \cf4 (\cf12 moving_away_corner_checker\cf4 (*it, current_turn_color)) 
+\f0\i \cf2 //If initially inside camp and moving away from corner
+\f1\i0 \cf4 \
+            \{\
+                
+\f0\i \cf2 //it->move_check_prioirty = 100;
+\f1\i0 \cf4 \
+                
+\f0\i \cf2 //cout<<"This move is moving away from corner";
+\f1\i0 \cf4 \
+                
+\f0\i \cf2 //it->print_absolute_move();
+\f1\i0 \cf4 \
+                moving_away_corner_inside_camp.\cf10 push_back\cf4 (*it);\
+            \}\
+        \}\
+        
+\f2\b \cf7 else
+\f1\b0 \cf4  
+\f0\i \cf2 //starting position outside camp
+\f1\i0 \cf4 \
+        \{\
+            
+\f2\b \cf7 if
+\f1\b0 \cf4 (!\cf12 inside_own_camp_checker\cf4 (it->\cf11 final_pos\cf4 , current_turn_color))\
+            \{\
+                
+\f0\i \cf2 //cout<<"This move is not moving from outside to inside";
+\f1\i0 \cf4 \
+                
+\f0\i \cf2 //it->print_absolute_move();
+\f1\i0 \cf4 \
+                other_moves.\cf10 push_back\cf4 (*it);\
+            \}\
+            \
+        \}\
+        \
+    \}\
+    \cf8 cout\cf4 <<\cf6 "\\nThe size of all moves moving out of camp "\cf4 <<moving_out_camp.\cf10 size\cf4 ();\
+    \cf8 cout\cf4 <<\cf6 "\\nThe size of all moves moving away from corner "\cf4 <<moving_away_corner_inside_camp.\cf10 size\cf4 ();\
+    \cf8 cout\cf4 <<\cf6 "\\nOther valid moves "\cf4 <<other_moves.\cf10 size\cf4 ();\
+    
+\f2\b \cf7 if
+\f1\b0 \cf4 (!moving_out_camp.\cf10 empty\cf4 ())\
+        
+\f2\b \cf7 return
+\f1\b0 \cf4  moving_out_camp;\
+    
+\f2\b \cf7 else
+\f1\b0 \cf4  
+\f2\b \cf7 if
+\f1\b0 \cf4 (!moving_away_corner_inside_camp.\cf10 empty\cf4 ())\
+        
+\f2\b \cf7 return
+\f1\b0 \cf4  moving_away_corner_inside_camp;\
+    
+\f2\b \cf7 else
+\f1\b0 \cf4 \
+        
+\f2\b \cf7 return
+\f1\b0 \cf4  other_moves;\
+\}\
+\
+\cf11 utility_value\cf4  MAX_VALUE(
+\f2\b \cf7 char
+\f1\b0 \cf4  board_state[\cf5 board_size\cf4 ][\cf5 board_size\cf4 ], \cf11 utility_value\cf4  alpha, \cf11 utility_value\cf4  beta, 
+\f2\b \cf7 char
+\f1\b0 \cf4  current_turn_color);\
+\cf11 utility_value\cf4  MIN_VALUE(
+\f2\b \cf7 char
+\f1\b0 \cf4  board_state[\cf5 board_size\cf4 ][\cf5 board_size\cf4 ], \cf11 utility_value\cf4  alpha, \cf11 utility_value\cf4  beta, 
+\f2\b \cf7 char
+\f1\b0 \cf4  current_turn_color);\
+\
+\cf8 vector\cf4 <\cf11 absolute_move\cf4 > valid_E_move(\cf11 position\cf4  initial_pos)\
+\{\
+    \cf8 vector\cf4 <\cf11 absolute_move\cf4 > possible_moves;\
+    \cf8 vector\cf4 <\cf11 next_move\cf4 > All_possible_E_moves;\
+    \cf11 position\cf4  next_pos;\
+    \cf11 next_move\cf4  new_move;\
+    \cf11 absolute_move\cf4  new_absolute_move;\
+    new_move.\cf11 initial\cf4  = initial_pos;\
+    \
+    
+\f0\i \cf2 //Checking the moves without jump
+\f1\i0 \cf4 \
+    new_move.\cf11 type\cf4  = \cf9 'E'\cf4 ;\
+    
+\f2\b \cf7 if
+\f1\b0 \cf4 (initial_pos.\cf11 Y_pos\cf4 +\cf9 1\cf4  < \cf5 board_size\cf4 )\
+    \{\
+        
+\f2\b \cf7 if
+\f1\b0 \cf4  (initial_pos.\cf11 X_pos\cf4 +\cf9 1\cf4  < \cf5 board_size\cf4  && \cf11 board\cf4 [initial_pos.\cf11 Y_pos\cf4 +\cf9 1\cf4 ][initial_pos.\cf11 X_pos\cf4 +\cf9 1\cf4 ] == \cf9 '.'\cf4 )\
+        \{\
+            next_pos.\cf11 Y_pos\cf4  = initial_pos.\cf11 Y_pos\cf4 +\cf9 1\cf4 ;\
+            next_pos.\cf11 X_pos\cf4  = initial_pos.\cf11 X_pos\cf4 +\cf9 1\cf4 ;\
+            new_move.\cf11 next\cf4  = next_pos;\
+            \
+            new_absolute_move.\cf11 starting_pos\cf4  = initial_pos;\
+            new_absolute_move.\cf11 final_pos\cf4  = next_pos;\
+            \
+            All_possible_E_moves.\cf10 clear\cf4 ();\
+            All_possible_E_moves.\cf10 push_back\cf4 (new_move);\
+            new_absolute_move.\cf11 intermediate_moves\cf4  = All_possible_E_moves;\
+            \
+            possible_moves.\cf10 push_back\cf4 (new_absolute_move);\
+        \}\
+        
+\f2\b \cf7 if
+\f1\b0 \cf4  (\cf11 board\cf4 [initial_pos.\cf11 Y_pos\cf4 +\cf9 1\cf4 ][initial_pos.\cf11 X_pos\cf4 ] == \cf9 '.'\cf4 )\
+        \{\
+            next_pos.\cf11 Y_pos\cf4  = initial_pos.\cf11 Y_pos\cf4 +\cf9 1\cf4 ;\
+            next_pos.\cf11 X_pos\cf4  = initial_pos.\cf11 X_pos\cf4 ;\
+            new_move.\cf11 next\cf4  = next_pos;\
+            \
+            new_absolute_move.\cf11 starting_pos\cf4  = initial_pos;\
+            new_absolute_move.\cf11 final_pos\cf4  = next_pos;\
+            \
+            All_possible_E_moves.\cf10 clear\cf4 ();\
+            All_possible_E_moves.\cf10 push_back\cf4 (new_move);\
+            new_absolute_move.\cf11 intermediate_moves\cf4  = All_possible_E_moves;\
+            \
+            possible_moves.\cf10 push_back\cf4 (new_absolute_move);\
+        \}\
+        
+\f2\b \cf7 if
+\f1\b0 \cf4  (initial_pos.\cf11 X_pos\cf4 -\cf9 1\cf4  > \cf9 0\cf4  && \cf11 board\cf4 [initial_pos.\cf11 Y_pos\cf4 +\cf9 1\cf4 ][initial_pos.\cf11 X_pos\cf4 -\cf9 1\cf4 ] == \cf9 '.'\cf4 )\
+        \{\
+            next_pos.\cf11 Y_pos\cf4  = initial_pos.\cf11 Y_pos\cf4 +\cf9 1\cf4 ;\
+            next_pos.\cf11 X_pos\cf4  = initial_pos.\cf11 X_pos\cf4 -\cf9 1\cf4 ;\
+            new_move.\cf11 next\cf4  = next_pos;\
+            \
+            new_absolute_move.\cf11 starting_pos\cf4  = initial_pos;\
+            new_absolute_move.\cf11 final_pos\cf4  = next_pos;\
+            \
+            All_possible_E_moves.\cf10 clear\cf4 ();\
+            All_possible_E_moves.\cf10 push_back\cf4 (new_move);\
+            new_absolute_move.\cf11 intermediate_moves\cf4  = All_possible_E_moves;\
+            \
+            possible_moves.\cf10 push_back\cf4 (new_absolute_move);\
+        \}\
+    \}\
+    
+\f2\b \cf7 if
+\f1\b0 \cf4  (initial_pos.\cf11 X_pos\cf4 -\cf9 1\cf4  > \cf9 0\cf4  && \cf11 board\cf4 [initial_pos.\cf11 Y_pos\cf4 ][initial_pos.\cf11 X_pos\cf4 -\cf9 1\cf4 ] == \cf9 '.'\cf4 )\
+    \{\
+        next_pos.\cf11 Y_pos\cf4  = initial_pos.\cf11 Y_pos\cf4 ;\
+        next_pos.\cf11 X_pos\cf4  = initial_pos.\cf11 X_pos\cf4 -\cf9 1\cf4 ;\
+        new_move.\cf11 next\cf4  = next_pos;\
+        \
+        new_absolute_move.\cf11 starting_pos\cf4  = initial_pos;\
+        new_absolute_move.\cf11 final_pos\cf4  = next_pos;\
+        \
+        All_possible_E_moves.\cf10 clear\cf4 ();\
+        All_possible_E_moves.\cf10 push_back\cf4 (new_move);\
+        new_absolute_move.\cf11 intermediate_moves\cf4  = All_possible_E_moves;\
+        \
+        possible_moves.\cf10 push_back\cf4 (new_absolute_move);\
+    \}\
+    
+\f2\b \cf7 if
+\f1\b0 \cf4 (initial_pos.\cf11 Y_pos\cf4 -\cf9 1\cf4  < \cf5 board_size\cf4 )\
+    \{\
+        
+\f2\b \cf7 if
+\f1\b0 \cf4  (initial_pos.\cf11 X_pos\cf4 -\cf9 1\cf4  > \cf9 0\cf4  && \cf11 board\cf4 [initial_pos.\cf11 Y_pos\cf4 -\cf9 1\cf4 ][initial_pos.\cf11 X_pos\cf4 -\cf9 1\cf4 ] == \cf9 '.'\cf4 )\
+        \{\
+            next_pos.\cf11 Y_pos\cf4  = initial_pos.\cf11 Y_pos\cf4 -\cf9 1\cf4 ;\
+            next_pos.\cf11 X_pos\cf4  = initial_pos.\cf11 X_pos\cf4 -\cf9 1\cf4 ;\
+            new_move.\cf11 next\cf4  = next_pos;\
+            \
+            new_absolute_move.\cf11 starting_pos\cf4  = initial_pos;\
+            new_absolute_move.\cf11 final_pos\cf4  = next_pos;\
+            \
+            All_possible_E_moves.\cf10 clear\cf4 ();\
+            All_possible_E_moves.\cf10 push_back\cf4 (new_move);\
+            new_absolute_move.\cf11 intermediate_moves\cf4  = All_possible_E_moves;\
+            \
+            possible_moves.\cf10 push_back\cf4 (new_absolute_move);\
+        \}\
+        
+\f2\b \cf7 if
+\f1\b0 \cf4  (\cf11 board\cf4 [initial_pos.\cf11 Y_pos\cf4 -\cf9 1\cf4 ][initial_pos.\cf11 X_pos\cf4 ] == \cf9 '.'\cf4 )\
+        \{\
+            next_pos.\cf11 Y_pos\cf4  = initial_pos.\cf11 Y_pos\cf4 -\cf9 1\cf4 ;\
+            next_pos.\cf11 X_pos\cf4  = initial_pos.\cf11 X_pos\cf4 ;\
+            new_move.\cf11 next\cf4  = next_pos;\
+            \
+            new_absolute_move.\cf11 starting_pos\cf4  = initial_pos;\
+            new_absolute_move.\cf11 final_pos\cf4  = next_pos;\
+            \
+            All_possible_E_moves.\cf10 clear\cf4 ();\
+            All_possible_E_moves.\cf10 push_back\cf4 (new_move);\
+            new_absolute_move.\cf11 intermediate_moves\cf4  = All_possible_E_moves;\
+            \
+            possible_moves.\cf10 push_back\cf4 (new_absolute_move);\
+        \}\
+        
+\f2\b \cf7 if
+\f1\b0 \cf4  (initial_pos.\cf11 X_pos\cf4 +\cf9 1\cf4  < \cf5 board_size\cf4  && \cf11 board\cf4 [initial_pos.\cf11 Y_pos\cf4 -\cf9 1\cf4 ][initial_pos.\cf11 X_pos\cf4 +\cf9 1\cf4 ] == \cf9 '.'\cf4 )\
+        \{\
+            next_pos.\cf11 Y_pos\cf4  = initial_pos.\cf11 Y_pos\cf4 -\cf9 1\cf4 ;\
+            next_pos.\cf11 X_pos\cf4  = initial_pos.\cf11 X_pos\cf4 +\cf9 1\cf4 ;\
+            new_move.\cf11 next\cf4  = next_pos;\
+            \
+            new_absolute_move.\cf11 starting_pos\cf4  = initial_pos;\
+            new_absolute_move.\cf11 final_pos\cf4  = next_pos;\
+            \
+            All_possible_E_moves.\cf10 clear\cf4 ();\
+            All_possible_E_moves.\cf10 push_back\cf4 (new_move);\
+            new_absolute_move.\cf11 intermediate_moves\cf4  = All_possible_E_moves;\
+            \
+            possible_moves.\cf10 push_back\cf4 (new_absolute_move);\
+        \}\
+    \}\
+    
+\f2\b \cf7 if
+\f1\b0 \cf4  (initial_pos.\cf11 X_pos\cf4 +\cf9 1\cf4  < \cf5 board_size\cf4  && \cf11 board\cf4 [initial_pos.\cf11 Y_pos\cf4 ][initial_pos.\cf11 X_pos\cf4 +\cf9 1\cf4 ] == \cf9 '.'\cf4 )\
+    \{\
+        next_pos.\cf11 Y_pos\cf4  = initial_pos.\cf11 Y_pos\cf4 ;\
+        next_pos.\cf11 X_pos\cf4  = initial_pos.\cf11 X_pos\cf4 +\cf9 1\cf4 ;\
+        new_move.\cf11 next\cf4  = next_pos;\
+        \
+        new_absolute_move.\cf11 starting_pos\cf4  = initial_pos;\
+        new_absolute_move.\cf11 final_pos\cf4  = next_pos;\
+        \
+        All_possible_E_moves.\cf10 clear\cf4 ();\
+        All_possible_E_moves.\cf10 push_back\cf4 (new_move);\
+        new_absolute_move.\cf11 intermediate_moves\cf4  = All_possible_E_moves;\
+        \
+        possible_moves.\cf10 push_back\cf4 (new_absolute_move);\
+    \}\
+    \
+    
+\f2\b \cf7 return
+\f1\b0 \cf4  possible_moves;\
+\}\
+\
+\cf8 vector\cf4 <\cf11 absolute_move\cf4 > valid_J_moves(\cf11 position\cf4  initial_pos, 
+\f2\b \cf7 bool
+\f1\b0 \cf4  visited[\cf5 board_size\cf4 ][\cf5 board_size\cf4 ])\
+\{\
+    \cf8 vector\cf4 <\cf11 next_move\cf4 > possible_moves;\
+    \cf8 vector\cf4 <\cf11 next_move\cf4 > next_J_moves;\
+    \cf11 absolute_move\cf4  new_J_move;\
+    \cf8 vector\cf4 <\cf11 absolute_move\cf4 > possible_J_moves;\
+    \cf8 vector\cf4 <\cf11 absolute_move\cf4 > possible_next_J_moves;\
+    \cf11 position\cf4  next_pos;\
+    \cf11 next_move\cf4  new_move;\
+    new_move.\cf11 initial\cf4  = initial_pos;\
+    \
+    \
+    
+\f0\i \cf2 //cout<<"\\nInitial position right now is ";
+\f1\i0 \cf4 \
+    
+\f0\i \cf2 //initial_pos.print();
+\f1\i0 \cf4 \
+    \
+    \
+    
+\f0\i \cf2 //Checking the moves with jump
+\f1\i0 \cf4 \
+    new_move.\cf11 type\cf4  = \cf9 'J'\cf4 ;\
+    
+\f2\b \cf7 if
+\f1\b0 \cf4 (initial_pos.\cf11 Y_pos\cf4 +\cf9 2\cf4  < \cf5 board_size\cf4 )\
+    \{\
+        
+\f2\b \cf7 if
+\f1\b0 \cf4  (initial_pos.\cf11 X_pos\cf4 +\cf9 2\cf4  < \cf5 board_size\cf4  &&\
+            \cf11 board\cf4 [initial_pos.\cf11 Y_pos\cf4 +\cf9 2\cf4 ][initial_pos.\cf11 X_pos\cf4 +\cf9 2\cf4 ] == \cf9 '.'\cf4  &&\
+            \cf11 board\cf4 [initial_pos.\cf11 Y_pos\cf4 +\cf9 1\cf4 ][initial_pos.\cf11 X_pos\cf4 +\cf9 1\cf4 ] != \cf9 '.'\cf4  &&\
+            visited[initial_pos.\cf11 Y_pos\cf4 +\cf9 2\cf4 ][initial_pos.\cf11 X_pos\cf4 +\cf9 2\cf4 ] == 
+\f2\b \cf7 false
+\f1\b0 \cf4 )\
+        \{\
+            next_pos.\cf11 Y_pos\cf4  = initial_pos.\cf11 Y_pos\cf4 +\cf9 2\cf4 ;\
+            next_pos.\cf11 X_pos\cf4  = initial_pos.\cf11 X_pos\cf4 +\cf9 2\cf4 ;\
+            new_move.\cf11 next\cf4  = next_pos;\
+            visited[next_pos.\cf11 Y_pos\cf4 ][next_pos.\cf11 X_pos\cf4 ] = 
+\f2\b \cf7 true
+\f1\b0 \cf4 ;\
+            \
+            new_J_move.\cf11 starting_pos\cf4  = initial_pos;\
+            new_J_move.\cf11 final_pos\cf4  = next_pos;\
+            new_J_move.\cf11 intermediate_moves\cf4 .\cf10 push_back\cf4 (new_move);\
+            possible_J_moves.\cf10 push_back\cf4 (new_J_move); 
+\f0\i \cf2 //One of the absolute_move possible is directly from initial to final
+\f1\i0 \cf4 \
+            \
+            possible_next_J_moves = \cf12 valid_J_moves\cf4 (next_pos,visited); 
+\f0\i \cf2 //All moves possible from the already visited position after jump.
+\f1\i0 \cf4 \
+            \
+            
+\f0\i \cf2 //Here in all the moves starting from the new position after Jump the initial jump is added and initial position is updated;
+\f1\i0 \cf4 \
+            
+\f2\b \cf7 for
+\f1\b0 \cf4 (\cf8 vector\cf4 <\cf11 absolute_move\cf4 >::\cf8 iterator\cf4  it = possible_next_J_moves.\cf10 begin\cf4 (); it!=possible_next_J_moves.\cf10 end\cf4 (); it++)\
+            \{\
+                next_J_moves = it->\cf11 intermediate_moves\cf4 ;
+\f0\i \cf2 // For that particular jump all the moves
+\f1\i0 \cf4 \
+                next_J_moves.\cf10 insert\cf4 (next_J_moves.\cf10 begin\cf4 (),new_move);\
+                it->\cf11 intermediate_moves\cf4 = next_J_moves;\
+                it->\cf11 starting_pos\cf4  = initial_pos;\
+\
+            \}\
+            
+\f0\i \cf2 //All the Jump moves from the initial position given as argument
+\f1\i0 \cf4 \
+            possible_J_moves.\cf10 insert\cf4 (possible_J_moves.\cf10 end\cf4 (), possible_next_J_moves.\cf10 begin\cf4 (), possible_next_J_moves.\cf10 end\cf4 ());\
+            \
+            \
+            \
+            \
+        \}\
+        
+\f2\b \cf7 if
+\f1\b0 \cf4  (\cf11 board\cf4 [initial_pos.\cf11 Y_pos\cf4 +\cf9 2\cf4 ][initial_pos.\cf11 X_pos\cf4 ] == \cf9 '.'\cf4  &&\
+            \cf11 board\cf4 [initial_pos.\cf11 Y_pos\cf4 +\cf9 1\cf4 ][initial_pos.\cf11 X_pos\cf4 ] != \cf9 '.'\cf4  &&\
+            visited[initial_pos.\cf11 Y_pos\cf4 +\cf9 2\cf4 ][initial_pos.\cf11 X_pos\cf4 ] == 
+\f2\b \cf7 false
+\f1\b0 \cf4 )\
+        \{\
+            next_pos.\cf11 Y_pos\cf4  = initial_pos.\cf11 Y_pos\cf4 +\cf9 2\cf4 ;\
+            next_pos.\cf11 X_pos\cf4  = initial_pos.\cf11 X_pos\cf4 ;\
+            new_move.\cf11 next\cf4  = next_pos;\
+            visited[next_pos.\cf11 Y_pos\cf4 ][next_pos.\cf11 X_pos\cf4 ] = 
+\f2\b \cf7 true
+\f1\b0 \cf4 ;\
+            \
+            new_J_move.\cf11 starting_pos\cf4  = initial_pos;\
+            new_J_move.\cf11 final_pos\cf4  = next_pos;\
+            new_J_move.\cf11 intermediate_moves\cf4 .\cf10 push_back\cf4 (new_move);\
+            possible_J_moves.\cf10 push_back\cf4 (new_J_move); 
+\f0\i \cf2 //One of the absolute_move possible is directly from initial to final
+\f1\i0 \cf4 \
+            \
+            possible_next_J_moves = \cf12 valid_J_moves\cf4 (next_pos,visited); 
+\f0\i \cf2 //All moves possible from the already visited position after jump.
+\f1\i0 \cf4 \
+            \
+            
+\f0\i \cf2 //Here in all the moves starting from the new position after Jump the initial jump is added and initial position is updated;
+\f1\i0 \cf4 \
+            
+\f2\b \cf7 for
+\f1\b0 \cf4 (\cf8 vector\cf4 <\cf11 absolute_move\cf4 >::\cf8 iterator\cf4  it = possible_next_J_moves.\cf10 begin\cf4 (); it!=possible_next_J_moves.\cf10 end\cf4 (); it++)\
+            \{\
+                next_J_moves = it->\cf11 intermediate_moves\cf4 ;
+\f0\i \cf2 // For that particular jump all the moves
+\f1\i0 \cf4 \
+                next_J_moves.\cf10 insert\cf4 (next_J_moves.\cf10 begin\cf4 (),new_move);\
+                it->\cf11 intermediate_moves\cf4 = next_J_moves;\
+                \
+                it->\cf11 starting_pos\cf4  = initial_pos;\
+                \
+            \}\
+            
+\f0\i \cf2 //All the Jump moves from the initial position given as argument
+\f1\i0 \cf4 \
+            possible_J_moves.\cf10 insert\cf4 (possible_J_moves.\cf10 end\cf4 (), possible_next_J_moves.\cf10 begin\cf4 (), possible_next_J_moves.\cf10 end\cf4 ());\
+        \}\
+        
+\f2\b \cf7 if
+\f1\b0 \cf4  (initial_pos.\cf11 X_pos\cf4 -\cf9 2\cf4  > \cf9 0\cf4  &&\
+            \cf11 board\cf4 [initial_pos.\cf11 Y_pos\cf4 +\cf9 2\cf4 ][initial_pos.\cf11 X_pos\cf4 -\cf9 2\cf4 ] == \cf9 '.'\cf4  &&\
+            \cf11 board\cf4 [initial_pos.\cf11 Y_pos\cf4 +\cf9 1\cf4 ][initial_pos.\cf11 X_pos\cf4 -\cf9 1\cf4 ] != \cf9 '.'\cf4  &&\
+            visited[initial_pos.\cf11 Y_pos\cf4 +\cf9 2\cf4 ][initial_pos.\cf11 X_pos\cf4 -\cf9 2\cf4 ] == 
+\f2\b \cf7 false
+\f1\b0 \cf4 )\
+        \{\
+            next_pos.\cf11 Y_pos\cf4  = initial_pos.\cf11 Y_pos\cf4 +\cf9 2\cf4 ;\
+            next_pos.\cf11 X_pos\cf4  = initial_pos.\cf11 X_pos\cf4 -\cf9 2\cf4 ;\
+            new_move.\cf11 next\cf4  = next_pos;\
+            visited[next_pos.\cf11 Y_pos\cf4 ][next_pos.\cf11 X_pos\cf4 ] = 
+\f2\b \cf7 true
+\f1\b0 \cf4 ;\
+            \
+            new_J_move.\cf11 starting_pos\cf4  = initial_pos;\
+            new_J_move.\cf11 final_pos\cf4  = next_pos;\
+            new_J_move.\cf11 intermediate_moves\cf4 .\cf10 push_back\cf4 (new_move);\
+            possible_J_moves.\cf10 push_back\cf4 (new_J_move); 
+\f0\i \cf2 //One of the absolute_move possible is directly from initial to final
+\f1\i0 \cf4 \
+            \
+            possible_next_J_moves = \cf12 valid_J_moves\cf4 (next_pos,visited); 
+\f0\i \cf2 //All moves possible from the already visited position after jump.
+\f1\i0 \cf4 \
+            \
+            
+\f0\i \cf2 //Here in all the moves starting from the new position after Jump the initial jump is added and initial position is updated;
+\f1\i0 \cf4 \
+            
+\f2\b \cf7 for
+\f1\b0 \cf4 (\cf8 vector\cf4 <\cf11 absolute_move\cf4 >::\cf8 iterator\cf4  it = possible_next_J_moves.\cf10 begin\cf4 (); it!=possible_next_J_moves.\cf10 end\cf4 (); it++)\
+            \{\
+                next_J_moves = it->\cf11 intermediate_moves\cf4 ;
+\f0\i \cf2 // For that particular jump all the moves
+\f1\i0 \cf4 \
+                next_J_moves.\cf10 insert\cf4 (next_J_moves.\cf10 begin\cf4 (),new_move);\
+                it->\cf11 intermediate_moves\cf4 = next_J_moves;\
+                it->\cf11 starting_pos\cf4  = initial_pos;\
+                \
+            \}\
+            
+\f0\i \cf2 //All the Jump moves from the initial position given as argument
+\f1\i0 \cf4 \
+            possible_J_moves.\cf10 insert\cf4 (possible_J_moves.\cf10 end\cf4 (), possible_next_J_moves.\cf10 begin\cf4 (), possible_next_J_moves.\cf10 end\cf4 ());\
+        \}\
+    \}\
+    
+\f2\b \cf7 if
+\f1\b0 \cf4  (initial_pos.\cf11 X_pos\cf4 -\cf9 2\cf4  > \cf9 0\cf4  &&\
+        \cf11 board\cf4 [initial_pos.\cf11 Y_pos\cf4 ][initial_pos.\cf11 X_pos\cf4 -\cf9 2\cf4 ] == \cf9 '.'\cf4  &&\
+        \cf11 board\cf4 [initial_pos.\cf11 Y_pos\cf4 ][initial_pos.\cf11 X_pos\cf4 -\cf9 1\cf4 ] != \cf9 '.'\cf4  &&\
+        visited[initial_pos.\cf11 Y_pos\cf4 ][initial_pos.\cf11 X_pos\cf4 -\cf9 2\cf4 ] == 
+\f2\b \cf7 false
+\f1\b0 \cf4 )\
+    \{\
+        next_pos.\cf11 Y_pos\cf4  = initial_pos.\cf11 Y_pos\cf4 ;\
+        next_pos.\cf11 X_pos\cf4  = initial_pos.\cf11 X_pos\cf4 -\cf9 2\cf4 ;\
+        new_move.\cf11 next\cf4  = next_pos;\
+        visited[next_pos.\cf11 Y_pos\cf4 ][next_pos.\cf11 X_pos\cf4 ] = 
+\f2\b \cf7 true
+\f1\b0 \cf4 ;\
+        \
+        new_J_move.\cf11 starting_pos\cf4  = initial_pos;\
+        new_J_move.\cf11 final_pos\cf4  = next_pos;\
+        new_J_move.\cf11 intermediate_moves\cf4 .\cf10 push_back\cf4 (new_move);\
+        possible_J_moves.\cf10 push_back\cf4 (new_J_move); 
+\f0\i \cf2 //One of the absolute_move possible is directly from initial to final
+\f1\i0 \cf4 \
+        \
+        possible_next_J_moves = \cf12 valid_J_moves\cf4 (next_pos,visited); 
+\f0\i \cf2 //All moves possible from the already visited position after jump.
+\f1\i0 \cf4 \
+        \
+        
+\f0\i \cf2 //Here in all the moves starting from the new position after Jump the initial jump is added and initial position is updated;
+\f1\i0 \cf4 \
+        
+\f2\b \cf7 for
+\f1\b0 \cf4 (\cf8 vector\cf4 <\cf11 absolute_move\cf4 >::\cf8 iterator\cf4  it = possible_next_J_moves.\cf10 begin\cf4 (); it!=possible_next_J_moves.\cf10 end\cf4 (); it++)\
+        \{\
+            next_J_moves = it->\cf11 intermediate_moves\cf4 ;
+\f0\i \cf2 // For that particular jump all the moves
+\f1\i0 \cf4 \
+            next_J_moves.\cf10 insert\cf4 (next_J_moves.\cf10 begin\cf4 (),new_move);\
+            it->\cf11 intermediate_moves\cf4 = next_J_moves;\
+            it->\cf11 starting_pos\cf4  = initial_pos;\
+            \
+        \}\
+        
+\f0\i \cf2 //All the Jump moves from the initial position given as argument
+\f1\i0 \cf4 \
+        possible_J_moves.\cf10 insert\cf4 (possible_J_moves.\cf10 end\cf4 (), possible_next_J_moves.\cf10 begin\cf4 (), possible_next_J_moves.\cf10 end\cf4 ());\
+    \}\
+    
+\f2\b \cf7 if
+\f1\b0 \cf4 (initial_pos.\cf11 Y_pos\cf4 -\cf9 2\cf4  < \cf5 board_size\cf4 )\
+    \{\
+        
+\f2\b \cf7 if
+\f1\b0 \cf4  (initial_pos.\cf11 X_pos\cf4 -\cf9 2\cf4  > \cf9 0\cf4  &&\
+            \cf11 board\cf4 [initial_pos.\cf11 Y_pos\cf4 -\cf9 2\cf4 ][initial_pos.\cf11 X_pos\cf4 -\cf9 2\cf4 ] == \cf9 '.'\cf4  &&\
+            \cf11 board\cf4 [initial_pos.\cf11 Y_pos\cf4 -\cf9 1\cf4 ][initial_pos.\cf11 X_pos\cf4 -\cf9 1\cf4 ] != \cf9 '.'\cf4  &&\
+            visited[initial_pos.\cf11 Y_pos\cf4 -\cf9 2\cf4 ][initial_pos.\cf11 X_pos\cf4 -\cf9 2\cf4 ] == 
+\f2\b \cf7 false
+\f1\b0 \cf4 )\
+        \{\
+            next_pos.\cf11 Y_pos\cf4  = initial_pos.\cf11 Y_pos\cf4 -\cf9 2\cf4 ;\
+            next_pos.\cf11 X_pos\cf4  = initial_pos.\cf11 X_pos\cf4 -\cf9 2\cf4 ;\
+            new_move.\cf11 next\cf4  = next_pos;\
+            visited[next_pos.\cf11 Y_pos\cf4 ][next_pos.\cf11 X_pos\cf4 ] = 
+\f2\b \cf7 true
+\f1\b0 \cf4 ;\
+            \
+            new_J_move.\cf11 starting_pos\cf4  = initial_pos;\
+            new_J_move.\cf11 final_pos\cf4  = next_pos;\
+            new_J_move.\cf11 intermediate_moves\cf4 .\cf10 push_back\cf4 (new_move);\
+            possible_J_moves.\cf10 push_back\cf4 (new_J_move); 
+\f0\i \cf2 //One of the absolute_move possible is directly from initial to final
+\f1\i0 \cf4 \
+            \
+            possible_next_J_moves = \cf12 valid_J_moves\cf4 (next_pos,visited); 
+\f0\i \cf2 //All moves possible from the already visited position after jump.
+\f1\i0 \cf4 \
+            \
+            
+\f0\i \cf2 //Here in all the moves starting from the new position after Jump the initial jump is added and initial position is updated;
+\f1\i0 \cf4 \
+            
+\f2\b \cf7 for
+\f1\b0 \cf4 (\cf8 vector\cf4 <\cf11 absolute_move\cf4 >::\cf8 iterator\cf4  it = possible_next_J_moves.\cf10 begin\cf4 (); it!=possible_next_J_moves.\cf10 end\cf4 (); it++)\
+            \{\
+                next_J_moves = it->\cf11 intermediate_moves\cf4 ;
+\f0\i \cf2 // For that particular jump all the moves
+\f1\i0 \cf4 \
+                next_J_moves.\cf10 insert\cf4 (next_J_moves.\cf10 begin\cf4 (),new_move);\
+                it->\cf11 intermediate_moves\cf4 = next_J_moves;\
+                it->\cf11 starting_pos\cf4  = initial_pos;\
+                \
+            \}\
+            
+\f0\i \cf2 //All the Jump moves from the initial position given as argument
+\f1\i0 \cf4 \
+            possible_J_moves.\cf10 insert\cf4 (possible_J_moves.\cf10 end\cf4 (), possible_next_J_moves.\cf10 begin\cf4 (), possible_next_J_moves.\cf10 end\cf4 ());\
+            \
+        \}\
+        
+\f2\b \cf7 if
+\f1\b0 \cf4  (\cf11 board\cf4 [initial_pos.\cf11 Y_pos\cf4 -\cf9 2\cf4 ][initial_pos.\cf11 X_pos\cf4 ] == \cf9 '.'\cf4  &&\
+            \cf11 board\cf4 [initial_pos.\cf11 Y_pos\cf4 -\cf9 1\cf4 ][initial_pos.\cf11 X_pos\cf4 ] != \cf9 '.'\cf4  &&\
+            visited[initial_pos.\cf11 Y_pos\cf4 -\cf9 2\cf4 ][initial_pos.\cf11 X_pos\cf4 ] == 
+\f2\b \cf7 false
+\f1\b0 \cf4 )\
+        \{\
+            next_pos.\cf11 Y_pos\cf4  = initial_pos.\cf11 Y_pos\cf4 -\cf9 2\cf4 ;\
+            next_pos.\cf11 X_pos\cf4  = initial_pos.\cf11 X_pos\cf4 ;\
+            new_move.\cf11 next\cf4  = next_pos;\
+            visited[next_pos.\cf11 Y_pos\cf4 ][next_pos.\cf11 X_pos\cf4 ] = 
+\f2\b \cf7 true
+\f1\b0 \cf4 ;\
+            \
+            new_J_move.\cf11 starting_pos\cf4  = initial_pos;\
+            new_J_move.\cf11 final_pos\cf4  = next_pos;\
+            new_J_move.\cf11 intermediate_moves\cf4 .\cf10 push_back\cf4 (new_move);\
+            possible_J_moves.\cf10 push_back\cf4 (new_J_move); 
+\f0\i \cf2 //One of the absolute_move possible is directly from initial to final
+\f1\i0 \cf4 \
+            \
+            possible_next_J_moves = \cf12 valid_J_moves\cf4 (next_pos,visited); 
+\f0\i \cf2 //All moves possible from the already visited position after jump.
+\f1\i0 \cf4 \
+            \
+            
+\f0\i \cf2 //Here in all the moves starting from the new position after Jump the initial jump is added and initial position is updated;
+\f1\i0 \cf4 \
+            
+\f2\b \cf7 for
+\f1\b0 \cf4 (\cf8 vector\cf4 <\cf11 absolute_move\cf4 >::\cf8 iterator\cf4  it = possible_next_J_moves.\cf10 begin\cf4 (); it!=possible_next_J_moves.\cf10 end\cf4 (); it++)\
+            \{\
+                next_J_moves = it->\cf11 intermediate_moves\cf4 ;
+\f0\i \cf2 // For that particular jump all the moves
+\f1\i0 \cf4 \
+                next_J_moves.\cf10 insert\cf4 (next_J_moves.\cf10 begin\cf4 (),new_move);\
+                it->\cf11 intermediate_moves\cf4 = next_J_moves;\
+                it->\cf11 starting_pos\cf4  = initial_pos;\
+                \
+            \}\
+            
+\f0\i \cf2 //All the Jump moves from the initial position given as argument
+\f1\i0 \cf4 \
+            possible_J_moves.\cf10 insert\cf4 (possible_J_moves.\cf10 end\cf4 (), possible_next_J_moves.\cf10 begin\cf4 (), possible_next_J_moves.\cf10 end\cf4 ());\
+        \}\
+        
+\f2\b \cf7 if
+\f1\b0 \cf4  (initial_pos.\cf11 X_pos\cf4 +\cf9 2\cf4  < \cf5 board_size\cf4  &&\
+            \cf11 board\cf4 [initial_pos.\cf11 Y_pos\cf4 -\cf9 2\cf4 ][initial_pos.\cf11 X_pos\cf4 +\cf9 2\cf4 ] == \cf9 '.'\cf4  &&\
+            \cf11 board\cf4 [initial_pos.\cf11 Y_pos\cf4 -\cf9 1\cf4 ][initial_pos.\cf11 X_pos\cf4 +\cf9 1\cf4 ] != \cf9 '.'\cf4  &&\
+            visited[initial_pos.\cf11 Y_pos\cf4 -\cf9 2\cf4 ][initial_pos.\cf11 X_pos\cf4 +\cf9 2\cf4 ] == 
+\f2\b \cf7 false
+\f1\b0 \cf4 )\
+        \{\
+            next_pos.\cf11 Y_pos\cf4  = initial_pos.\cf11 Y_pos\cf4 -\cf9 2\cf4 ;\
+            next_pos.\cf11 X_pos\cf4  = initial_pos.\cf11 X_pos\cf4 +\cf9 2\cf4 ;\
+            new_move.\cf11 next\cf4  = next_pos;\
+            visited[next_pos.\cf11 Y_pos\cf4 ][next_pos.\cf11 X_pos\cf4 ] = 
+\f2\b \cf7 true
+\f1\b0 \cf4 ;\
+            \
+            new_J_move.\cf11 starting_pos\cf4  = initial_pos;\
+            new_J_move.\cf11 final_pos\cf4  = next_pos;\
+            new_J_move.\cf11 intermediate_moves\cf4 .\cf10 push_back\cf4 (new_move);\
+            possible_J_moves.\cf10 push_back\cf4 (new_J_move); 
+\f0\i \cf2 //One of the absolute_move possible is directly from initial to final
+\f1\i0 \cf4 \
+            \
+            possible_next_J_moves = \cf12 valid_J_moves\cf4 (next_pos,visited); 
+\f0\i \cf2 //All moves possible from the already visited position after jump.
+\f1\i0 \cf4 \
+            \
+            
+\f0\i \cf2 //Here in all the moves starting from the new position after Jump the initial jump is added and initial position is updated;
+\f1\i0 \cf4 \
+            
+\f2\b \cf7 for
+\f1\b0 \cf4 (\cf8 vector\cf4 <\cf11 absolute_move\cf4 >::\cf8 iterator\cf4  it = possible_next_J_moves.\cf10 begin\cf4 (); it!=possible_next_J_moves.\cf10 end\cf4 (); it++)\
+            \{\
+                next_J_moves = it->\cf11 intermediate_moves\cf4 ;
+\f0\i \cf2 // For that particular jump all the moves
+\f1\i0 \cf4 \
+                next_J_moves.\cf10 insert\cf4 (next_J_moves.\cf10 begin\cf4 (),new_move);\
+                it->\cf11 intermediate_moves\cf4 = next_J_moves;\
+                it->\cf11 starting_pos\cf4  = initial_pos;\
+                \
+            \}\
+            
+\f0\i \cf2 //All the Jump moves from the initial position given as argument
+\f1\i0 \cf4 \
+            possible_J_moves.\cf10 insert\cf4 (possible_J_moves.\cf10 end\cf4 (), possible_next_J_moves.\cf10 begin\cf4 (), possible_next_J_moves.\cf10 end\cf4 ());\
+        \}\
+    \}\
+    
+\f2\b \cf7 if
+\f1\b0 \cf4  (initial_pos.\cf11 X_pos\cf4 +\cf9 2\cf4  < \cf5 board_size\cf4  &&\
+        \cf11 board\cf4 [initial_pos.\cf11 Y_pos\cf4 ][initial_pos.\cf11 X_pos\cf4 +\cf9 2\cf4 ] == \cf9 '.'\cf4  &&\
+        \cf11 board\cf4 [initial_pos.\cf11 Y_pos\cf4 ][initial_pos.\cf11 X_pos\cf4 +\cf9 1\cf4 ] != \cf9 '.'\cf4  &&\
+        visited[initial_pos.\cf11 Y_pos\cf4 ][initial_pos.\cf11 X_pos\cf4 +\cf9 2\cf4 ] == 
+\f2\b \cf7 false
+\f1\b0 \cf4 )\
+    \{\
+        next_pos.\cf11 Y_pos\cf4  = initial_pos.\cf11 Y_pos\cf4 ;\
+        next_pos.\cf11 X_pos\cf4  = initial_pos.\cf11 X_pos\cf4 +\cf9 2\cf4 ;\
+        new_move.\cf11 next\cf4  = next_pos;\
+        visited[next_pos.\cf11 Y_pos\cf4 ][next_pos.\cf11 X_pos\cf4 ] = 
+\f2\b \cf7 true
+\f1\b0 \cf4 ;\
+        \
+        new_J_move.\cf11 starting_pos\cf4  = initial_pos;\
+        new_J_move.\cf11 final_pos\cf4  = next_pos;\
+        new_J_move.\cf11 intermediate_moves\cf4 .\cf10 push_back\cf4 (new_move);\
+        possible_J_moves.\cf10 push_back\cf4 (new_J_move); 
+\f0\i \cf2 //One of the absolute_move possible is directly from initial to final
+\f1\i0 \cf4 \
+        \
+        possible_next_J_moves = \cf12 valid_J_moves\cf4 (next_pos,visited); 
+\f0\i \cf2 //All moves possible from the already visited position after jump.
+\f1\i0 \cf4 \
+        \
+        
+\f0\i \cf2 //Here in all the moves starting from the new position after Jump the initial jump is added and initial position is updated;
+\f1\i0 \cf4 \
+        
+\f2\b \cf7 for
+\f1\b0 \cf4 (\cf8 vector\cf4 <\cf11 absolute_move\cf4 >::\cf8 iterator\cf4  it = possible_next_J_moves.\cf10 begin\cf4 (); it!=possible_next_J_moves.\cf10 end\cf4 (); it++)\
+        \{\
+            next_J_moves = it->\cf11 intermediate_moves\cf4 ;
+\f0\i \cf2 // For that particular jump all the moves
+\f1\i0 \cf4 \
+            next_J_moves.\cf10 insert\cf4 (next_J_moves.\cf10 begin\cf4 (),new_move);\
+            it->\cf11 intermediate_moves\cf4 = next_J_moves;\
+            it->\cf11 starting_pos\cf4  = initial_pos;\
+            \
+        \}\
+        
+\f0\i \cf2 //All the Jump moves from the initial position given as argument
+\f1\i0 \cf4 \
+        possible_J_moves.\cf10 insert\cf4 (possible_J_moves.\cf10 end\cf4 (), possible_next_J_moves.\cf10 begin\cf4 (), possible_next_J_moves.\cf10 end\cf4 ());\
+        \
+    \}\
+    \
+    
+\f2\b \cf7 return
+\f1\b0 \cf4  possible_J_moves;\
+    \
+\}\
+
+\f0\i \cf2 //Valid_move is a function that returns a list of all possible valid moves
+\f1\i0 \cf4 \
+\cf8 vector\cf4 <\cf11 absolute_move\cf4 > valid_move(\cf8 vector\cf4 <\cf11 position\cf4 > my_piece_locations,
+\f2\b \cf7 char
+\f1\b0 \cf4  current_turn_color)\
+\{\
+    \cf8 vector\cf4 <\cf11 absolute_move\cf4 > all_possible_moves;\
+    \cf8 vector\cf4 <\cf11 absolute_move\cf4 > moves_per_piece;\
+    \cf8 vector\cf4 <\cf11 absolute_move\cf4 > possible_E_moves;\
+    \cf8 vector\cf4 <\cf11 absolute_move\cf4 > possible_J_moves;\
+    \cf11 position\cf4  next_pos;\
+    \cf11 position\cf4  initial_pos;\
+    \
+    \
+    \
+    
+\f2\b \cf7 for
+\f1\b0 \cf4  (\cf8 vector\cf4 <\cf11 position\cf4 >::\cf8 iterator\cf4  pos = my_piece_locations.\cf10 begin\cf4 () ; pos != my_piece_locations.\cf10 end\cf4 (); ++pos)\
+    \{\
+        initial_pos = *pos;\
+        moves_per_piece.\cf10 clear\cf4 ();\
+        
+\f0\i \cf2 //cout<<"\\nChecking all moves for ";
+\f1\i0 \cf4 \
+        
+\f0\i \cf2 //initial_pos.print();
+\f1\i0 \cf4 \
+        \
+        
+\f0\i \cf2 //Function for E moves
+\f1\i0 \cf4 \
+        \
+        possible_E_moves = \cf12 valid_E_move\cf4 (initial_pos);
+\f0\i \cf2 //gives all possible E moves, regardless of homework rules
+\f1\i0 \cf4 \
+        
+\f0\i \cf2 //cout<<"\\n Number of valid E moves are "<<possible_E_moves.size();
+\f1\i0 \cf4 \
+        moves_per_piece = possible_E_moves;\
+        \
+        
+\f0\i \cf2 //Function for J moves
+\f1\i0 \cf4 \
+\
+        
+\f2\b \cf7 bool
+\f1\b0 \cf4  Visited[\cf5 board_size\cf4 ][\cf5 board_size\cf4 ] = \{
+\f2\b \cf7 false
+\f1\b0 \cf4 \};\
+        possible_J_moves = \cf12 valid_J_moves\cf4 (initial_pos,Visited);\
+        
+\f0\i \cf2 //cout<<"\\n Number of valid J moves are "<<possible_J_moves.size();
+\f1\i0 \cf4 \
+        \
+        
+\f0\i \cf2 /*cout<<"\\n*********************************************************";
+\f1\i0 \cf4 \
+
+\f0\i \cf2         for(vector<absolute_move>::iterator j_move = possible_J_moves.begin(); j_move!=possible_J_moves.end(); j_move++ )
+\f1\i0 \cf4 \
+
+\f0\i \cf2         \{
+\f1\i0 \cf4 \
+
+\f0\i \cf2             cout<<endl;
+\f1\i0 \cf4 \
+
+\f0\i \cf2             j_move->print_absolute_move();
+\f1\i0 \cf4 \
+
+\f0\i \cf2         \}
+\f1\i0 \cf4 \
+
+\f0\i \cf2         cout<<"\\n*********************************************************";*/
+\f1\i0 \cf4 \
+        \
+        moves_per_piece.\cf10 insert\cf4 (moves_per_piece.\cf10 end\cf4 (),possible_J_moves.\cf10 begin\cf4 (),possible_J_moves.\cf10 end\cf4 ());\
+        
+\f0\i \cf2 //cout<<"\\n Their total moves are "<<moves_per_piece.size();
+\f1\i0 \cf4 \
+        all_possible_moves.\cf10 insert\cf4 (all_possible_moves.\cf10 end\cf4 (), moves_per_piece.\cf10 begin\cf4 (), moves_per_piece.\cf10 end\cf4 ());\
+        \
+    \}\
+    \cf8 cout\cf4 <<\cf6 "\\nThe length of all possible moves is "\cf4 <<all_possible_moves.\cf10 size\cf4 ();\
+    \
+    all_possible_moves = \cf12 Move_checker\cf4 (all_possible_moves, current_turn_color);\
+    \cf8 cout\cf4 <<\cf6 "\\nThe length of all possible moves after checker is "\cf4 <<all_possible_moves.\cf10 size\cf4 ();\
+    \
+    
+\f2\b \cf7 return
+\f1\b0 \cf4  all_possible_moves;\
+\}\
+
+\f2\b \cf7 int
+\f1\b0 \cf4  nodes_expanded = \cf9 0\cf4 ;\
+
+\f2\b \cf7 int
+\f1\b0 \cf4  depth_minimax = \cf9 0\cf4 ;\
+
+\f2\b \cf7 bool
+\f1\b0 \cf4  terminal_state(
+\f2\b \cf7 char
+\f1\b0 \cf4  board_state[\cf5 board_size\cf4 ][\cf5 board_size\cf4 ])\
+\{\
+        
+\f2\b \cf7 if
+\f1\b0 \cf4 (\cf11 depth_minimax\cf4  >= \cf5 maximum_depth\cf4 )\
+            
+\f2\b \cf7 return
+\f1\b0 \cf4  
+\f2\b \cf7 true
+\f1\b0 \cf4 ;\
+        
+\f2\b \cf7 else
+\f1\b0 \cf4 \
+            
+\f2\b \cf7 return
+\f1\b0 \cf4  
+\f2\b \cf7 false
+\f1\b0 \cf4 ;\
+\
+\}\
+\cf11 utility_value\cf4  utility(
+\f2\b \cf7 char
+\f1\b0 \cf4  board_state[\cf5 board_size\cf4 ][\cf5 board_size\cf4 ], 
+\f2\b \cf7 char
+\f1\b0 \cf4  current_turn_color)\
+\{\
+    \cf11 utility_value\cf4  v=\cf9 0\cf4 ;\
+    \cf11 utility_value\cf4  dist_from_goal = \cf9 0\cf4 ;\
+    
+\f2\b \cf7 for
+\f1\b0 \cf4  (
+\f2\b \cf7 int
+\f1\b0 \cf4  i =\cf9 0\cf4 ; i<\cf5 board_size\cf4 ; i++)\
+    \{\
+        
+\f2\b \cf7 for
+\f1\b0 \cf4  (
+\f2\b \cf7 int
+\f1\b0 \cf4  j=\cf9 0\cf4 ; j<\cf5 board_size\cf4 ; j++)\
+        \{\
+            \
+            
+\f2\b \cf7 if
+\f1\b0 \cf4 (board_state[i][j] == current_turn_color)\
+            \{\
+                \cf11 position\cf4  location;\
+                location.\cf11 X_pos\cf4  = j;\
+                location.\cf11 Y_pos\cf4  = i;\
+                dist_from_goal+= \cf12 closeness_to_goal_corner\cf4 (location, current_turn_color);\
+                
+\f0\i \cf2 //location.print();
+\f1\i0 \cf4 \
+                
+\f0\i \cf2 //cout<<endl;
+\f1\i0 \cf4 \
+            \}\
+        \}\
+    \}\
+    v = dist_from_goal;\
+    
+\f2\b \cf7 return
+\f1\b0 \cf4  v;\
+    \
+\}\
+\
+\cf11 utility_value\cf4  MAX_VALUE(
+\f2\b \cf7 char
+\f1\b0 \cf4  board_state[\cf5 board_size\cf4 ][\cf5 board_size\cf4 ], \cf11 utility_value\cf4  alpha, \cf11 utility_value\cf4  beta, 
+\f2\b \cf7 char
+\f1\b0 \cf4  current_turn_color)\
+\{\
+    \cf11 depth_minimax\cf4 ++;\
+    \cf8 cout\cf4 <<\cf6 "\\n************** MAX ******************"\cf4 ;\
+    \cf8 cout\cf4 <<\cf6 " Currently we are at depth "\cf4 <<\cf11 depth_minimax\cf4 ;\
+    \
+    \
+    
+\f0\i \cf2 //Next 3 lines part of pseudo code
+\f1\i0 \cf4 \
+    
+\f0\i \cf2 //****************************
+\f1\i0 \cf4 \
+    
+\f2\b \cf7 if
+\f1\b0 \cf4 (\cf12 terminal_state\cf4 (board_state))\
+    \{\
+        \cf11 depth_minimax\cf4 --;\
+        
+\f2\b \cf7 return
+\f1\b0 \cf4  \cf12 utility\cf4 (board_state, current_turn_color);\
+    \}\
+    \
+    \cf11 utility_value\cf4  v = \cf11 neg_infinity\cf4 ;\
+    
+\f0\i \cf2 //***************************
+\f1\i0 \cf4 \
+    
+\f0\i \cf2 //vector<next_move> actions;
+\f1\i0 \cf4 \
+    \cf8 vector\cf4 <\cf11 position\cf4 > my_piece_locations;\
+    
+\f2\b \cf7 char
+\f1\b0 \cf4  opp_color;\
+    
+\f2\b \cf7 if
+\f1\b0 \cf4  (current_turn_color == \cf9 'B'\cf4 )\
+        opp_color = \cf9 'W'\cf4 ;\
+    
+\f2\b \cf7 else
+\f1\b0 \cf4 \
+        opp_color = \cf9 'B'\cf4 ;\
+    \cf8 cout\cf4 <<\cf6 "My locations are\\n"\cf4 ;\
+    
+\f2\b \cf7 for
+\f1\b0 \cf4  (
+\f2\b \cf7 int
+\f1\b0 \cf4  i =\cf9 0\cf4 ; i<\cf5 board_size\cf4 ; i++)\
+    \{\
+        
+\f2\b \cf7 for
+\f1\b0 \cf4  (
+\f2\b \cf7 int
+\f1\b0 \cf4  j=\cf9 0\cf4 ; j<\cf5 board_size\cf4 ; j++)\
+        \{\
+            
+\f2\b \cf7 if
+\f1\b0 \cf4 (board_state[i][j] == current_turn_color)\
+            \{\
+                \cf11 position\cf4  location;\
+                location.\cf11 X_pos\cf4  = j;\
+                location.\cf11 Y_pos\cf4  = i;\
+                my_piece_locations.\cf10 push_back\cf4 (location);\
+                location.\cf12 print\cf4 ();\
+                \cf8 cout\cf4 <<\cf10 endl\cf4 ;\
+            \}\
+        \}\
+    \}\
+    \cf11 position\cf4  initial_pos;\
+    \
+    
+\f0\i \cf2 //Iterating through all actions possible and finding the maximum value of v for each ACTION
+\f1\i0 \cf4 \
+    \cf8 vector\cf4 <\cf11 absolute_move\cf4 > All_piece_moves;\
+    All_piece_moves = \cf12 valid_move\cf4 (my_piece_locations,current_turn_color);\
+    
+\f0\i \cf2 //actions.insert(actions.end(),list_move.begin(),list_move.end());
+\f1\i0 \cf4 \
+    \
+    
+\f0\i \cf2 //A utility value that stores the value of that particular action
+\f1\i0 \cf4 \
+    \cf11 utility_value\cf4  action_value;\
+    \
+    
+\f2\b \cf7 char
+\f1\b0 \cf4  new_board[\cf5 board_size\cf4 ][\cf5 board_size\cf4 ];\
+    
+\f2\b \cf7 for
+\f1\b0 \cf4  (\cf8 vector\cf4 <\cf11 absolute_move\cf4 >::\cf8 iterator\cf4  it = All_piece_moves.\cf10 begin\cf4 () ; it != All_piece_moves.\cf10 end\cf4 (); ++it)\
+    \{\
+        \
+        it->\cf12 print_absolute_move\cf4 ();\
+        
+\f0\i \cf2 /*if(initial_pos.isEqual(it->starting_pos))
+\f1\i0 \cf4 \
+
+\f0\i \cf2          \{
+\f1\i0 \cf4 \
+
+\f0\i \cf2          for (int i =0; i<board_size; i++)
+\f1\i0 \cf4 \
+
+\f0\i \cf2          \{
+\f1\i0 \cf4 \
+
+\f0\i \cf2          //cout<<"row number "<<i<<board_row<<endl;
+\f1\i0 \cf4 \
+
+\f0\i \cf2          strcpy(new_board[i],board[i]);
+\f1\i0 \cf4 \
+
+\f0\i \cf2          \}
+\f1\i0 \cf4 \
+
+\f0\i \cf2          \}*/
+\f1\i0 \cf4 \
+        \
+        
+\f2\b \cf7 for
+\f1\b0 \cf4  (
+\f2\b \cf7 int
+\f1\b0 \cf4  i =\cf9 0\cf4 ; i<\cf5 board_size\cf4 ; i++)\
+        \{\
+            
+\f0\i \cf2 //cout<<"row number "<<i<<board_row<<endl;
+\f1\i0 \cf4 \
+            \cf10 strcpy\cf4 (new_board[i],board_state[i]);\
+        \}\
+        new_board[it->\cf11 starting_pos\cf4 .\cf11 Y_pos\cf4 ][it->\cf11 starting_pos\cf4 .\cf11 X_pos\cf4 ] = \cf9 '.'\cf4 ;\
+        new_board[it->\cf11 final_pos\cf4 .\cf11 Y_pos\cf4 ][it->\cf11 final_pos\cf4 .\cf11 X_pos\cf4 ] = current_turn_color;\
+        
+\f0\i \cf2 /*cout<<"Board position after move\\n";
+\f1\i0 \cf4 \
+
+\f0\i \cf2         for (int i =0; i<board_size; i++)
+\f1\i0 \cf4 \
+
+\f0\i \cf2         \{
+\f1\i0 \cf4 \
+
+\f0\i \cf2             for (int j=0; j<board_size; j++)
+\f1\i0 \cf4 \
+
+\f0\i \cf2                 cout<<new_board[i][j];
+\f1\i0 \cf4 \
+
+\f0\i \cf2             cout<<endl;
+\f1\i0 \cf4 \
+
+\f0\i \cf2         \}
+\f1\i0 \cf4 \
+
+\f0\i \cf2          */
+\f1\i0 \cf4 \
+        action_value = \cf12 MIN_VALUE\cf4 (new_board,alpha,beta,opp_color);\
+        it->\cf11 move_priority\cf4  = action_value;\
+        
+\f0\i \cf2 //new_board is the new state after a particular action
+\f1\i0 \cf4 \
+        
+\f0\i \cf2 //**************************************************
+\f1\i0 \cf4 \
+        v = \cf10 max\cf4 (v,action_value);\
+        \cf8 cout\cf4 <<\cf6 "\\nAfter this iteration of MAX the value of v is "\cf4 <<v<<\cf10 endl\cf4 <<\cf10 endl\cf4 ;\
+        
+\f2\b \cf7 if
+\f1\b0 \cf4  (v >= beta)\
+        \{\
+            \cf11 depth_minimax\cf4 --;\
+            
+\f2\b \cf7 return
+\f1\b0 \cf4  v;\
+        \}\
+        \
+        \
+        alpha = \cf10 max\cf4 (alpha,v);\
+        
+\f0\i \cf2 //**************************************************
+\f1\i0 \cf4 \
+    \}\
+    \cf11 depth_minimax\cf4 --;\
+    
+\f2\b \cf7 return
+\f1\b0 \cf4  v;\
+\}\
+\
+\cf11 utility_value\cf4  MIN_VALUE(
+\f2\b \cf7 char
+\f1\b0 \cf4  board_state[\cf5 board_size\cf4 ][\cf5 board_size\cf4 ], \cf11 utility_value\cf4  alpha, \cf11 utility_value\cf4  beta, 
+\f2\b \cf7 char
+\f1\b0 \cf4  current_turn_color)\
+\{\
+    \cf11 depth_minimax\cf4 ++;\
+    \cf8 cout\cf4 <<\cf6 "\\n************** MIN ******************"\cf4 ;\
+    \cf8 cout\cf4 <<\cf6 " Currently we are at depth "\cf4 <<\cf11 depth_minimax\cf4 ;\
+    \
+    
+\f0\i \cf2 //Next 3 lines part of pseudo code
+\f1\i0 \cf4 \
+    
+\f0\i \cf2 //****************************
+\f1\i0 \cf4 \
+    
+\f2\b \cf7 if
+\f1\b0 \cf4 (\cf12 terminal_state\cf4 (board_state))\
+    \{\
+        \cf11 depth_minimax\cf4 --;\
+        
+\f2\b \cf7 return
+\f1\b0 \cf4  \cf12 utility\cf4 (board_state,current_turn_color);\
+    \}\
+    \
+    \cf11 utility_value\cf4  v = \cf11 infinity\cf4 ;\
+    
+\f0\i \cf2 //***************************
+\f1\i0 \cf4 \
+    
+\f0\i \cf2 //vector<next_move> actions;
+\f1\i0 \cf4 \
+    \cf8 vector\cf4 <\cf11 position\cf4 > my_piece_locations;\
+    
+\f2\b \cf7 char
+\f1\b0 \cf4  opp_color;\
+    
+\f2\b \cf7 if
+\f1\b0 \cf4  (current_turn_color == \cf9 'B'\cf4 )\
+        opp_color = \cf9 'W'\cf4 ;\
+    
+\f2\b \cf7 else
+\f1\b0 \cf4 \
+        opp_color = \cf9 'B'\cf4 ;\
+   \
+    \cf8 cout\cf4 <<\cf6 "My locations are\\n"\cf4 ;\
+    
+\f2\b \cf7 for
+\f1\b0 \cf4  (
+\f2\b \cf7 int
+\f1\b0 \cf4  i =\cf9 0\cf4 ; i<\cf5 board_size\cf4 ; i++)\
+    \{\
+        
+\f2\b \cf7 for
+\f1\b0 \cf4  (
+\f2\b \cf7 int
+\f1\b0 \cf4  j=\cf9 0\cf4 ; j<\cf5 board_size\cf4 ; j++)\
+        \{\
+            
+\f2\b \cf7 if
+\f1\b0 \cf4 (board_state[i][j] == current_turn_color)\
+            \{\
+                \cf11 position\cf4  location;\
+                location.\cf11 X_pos\cf4  = j;\
+                location.\cf11 Y_pos\cf4  = i;\
+                my_piece_locations.\cf10 push_back\cf4 (location);\
+                location.\cf12 print\cf4 ();\
+                \cf8 cout\cf4 <<\cf10 endl\cf4 ;\
+            \}\
+        \}\
+    \}\
+    \cf11 position\cf4  initial_pos;\
+    
+\f0\i \cf2 //Iterating through all actions possible and finding the maximum value of v for each ACTION
+\f1\i0 \cf4 \
+    \cf8 vector\cf4 <\cf11 absolute_move\cf4 > All_piece_moves;\
+    All_piece_moves = \cf12 valid_move\cf4 (my_piece_locations,current_turn_color);\
+    
+\f0\i \cf2 //actions.insert(actions.end(),list_move.begin(),list_move.end());
+\f1\i0 \cf4 \
+    \
+    
+\f0\i \cf2 //A utility value that stores the value of that particular action
+\f1\i0 \cf4 \
+    \cf11 utility_value\cf4  action_value;\
+    \
+    \
+    
+\f2\b \cf7 char
+\f1\b0 \cf4  new_board[\cf5 board_size\cf4 ][\cf5 board_size\cf4 ];\
+    
+\f2\b \cf7 for
+\f1\b0 \cf4  (\cf8 vector\cf4 <\cf11 absolute_move\cf4 >::\cf8 iterator\cf4  it = All_piece_moves.\cf10 begin\cf4 () ; it != All_piece_moves.\cf10 end\cf4 (); ++it)\
+    \{\
+        \
+        it->\cf12 print_absolute_move\cf4 ();\
+        
+\f0\i \cf2 /*if(initial_pos.isEqual(it->starting_pos))
+\f1\i0 \cf4 \
+
+\f0\i \cf2          \{
+\f1\i0 \cf4 \
+
+\f0\i \cf2          for (int i =0; i<board_size; i++)
+\f1\i0 \cf4 \
+
+\f0\i \cf2          \{
+\f1\i0 \cf4 \
+
+\f0\i \cf2          //cout<<"row number "<<i<<board_row<<endl;
+\f1\i0 \cf4 \
+
+\f0\i \cf2          strcpy(new_board[i],board[i]);
+\f1\i0 \cf4 \
+
+\f0\i \cf2          \}
+\f1\i0 \cf4 \
+
+\f0\i \cf2          \}*/
+\f1\i0 \cf4 \
+        
+\f2\b \cf7 for
+\f1\b0 \cf4  (
+\f2\b \cf7 int
+\f1\b0 \cf4  i =\cf9 0\cf4 ; i<\cf5 board_size\cf4 ; i++)\
+        \{\
+            
+\f0\i \cf2 //cout<<"row number "<<i<<board_row<<endl;
+\f1\i0 \cf4 \
+            \cf10 strcpy\cf4 (new_board[i],board_state[i]);\
+        \}\
+        new_board[it->\cf11 starting_pos\cf4 .\cf11 Y_pos\cf4 ][it->\cf11 starting_pos\cf4 .\cf11 X_pos\cf4 ] = \cf9 '.'\cf4 ;\
+        new_board[it->\cf11 final_pos\cf4 .\cf11 Y_pos\cf4 ][it->\cf11 final_pos\cf4 .\cf11 X_pos\cf4 ] = current_turn_color;\
+        
+\f0\i \cf2 /*cout<<"Board position after move\\n";
+\f1\i0 \cf4 \
+
+\f0\i \cf2         for (int i =0; i<board_size; i++)
+\f1\i0 \cf4 \
+
+\f0\i \cf2         \{
+\f1\i0 \cf4 \
+
+\f0\i \cf2             for (int j=0; j<board_size; j++)
+\f1\i0 \cf4 \
+
+\f0\i \cf2                 cout<<new_board[i][j];
+\f1\i0 \cf4 \
+
+\f0\i \cf2             cout<<endl;
+\f1\i0 \cf4 \
+
+\f0\i \cf2         \}*/
+\f1\i0 \cf4 \
+        \
+        action_value = \cf12 MAX_VALUE\cf4 (new_board,alpha,beta,opp_color);\
+        it->\cf11 move_priority\cf4  = action_value;\
+        
+\f0\i \cf2 //new_board is the new state after a particular action
+\f1\i0 \cf4 \
+        
+\f0\i \cf2 //**************************************************
+\f1\i0 \cf4 \
+        v = \cf10 min\cf4 (v,action_value);\
+        \cf8 cout\cf4 <<\cf6 "\\nAfter this iteration of MIN the value of v is "\cf4 <<v<<\cf10 endl\cf4 <<\cf10 endl\cf4 ;\
+        
+\f2\b \cf7 if
+\f1\b0 \cf4  (v <= alpha)\
+        \{\
+            \cf11 depth_minimax\cf4 --;\
+            
+\f2\b \cf7 return
+\f1\b0 \cf4  v;\
+        \}\
+        \
+        \
+        beta = \cf10 min\cf4 (beta,v);\
+        
+\f0\i \cf2 //**************************************************
+\f1\i0 \cf4 \
+    \}\
+    \cf11 depth_minimax\cf4 --;\
+    
+\f2\b \cf7 return
+\f1\b0 \cf4  v;\
+\}\
+    \
+\cf11 absolute_move\cf4  ALPHA_BETA_SEARCH(
+\f2\b \cf7 char
+\f1\b0 \cf4  board_state[\cf5 board_size\cf4 ][\cf5 board_size\cf4 ], 
+\f2\b \cf7 char
+\f1\b0 \cf4  my_color)\
+\{\
+    \cf11 utility_value\cf4  v;\
+    v = \cf12 MAX_VALUE\cf4 (board_state, \cf11 neg_infinity\cf4 , \cf11 infinity\cf4 , my_color);\
+    \cf8 cout\cf4 <<\cf6 "Maximum utility value achieved is "\cf4 <<v<<\cf10 endl\cf4 ;\
+    \cf11 absolute_move\cf4  The_final_moves;\
+    \
+    
+\f2\b \cf7 return
+\f1\b0 \cf4  The_final_moves;\
+    \
+\}\
+\
+
+\f2\b \cf7 int
+\f1\b0 \cf4  main() \{\
+    
+\f0\i \cf2 // insert code here...
+\f1\i0 \cf4 \
+    
+\f0\i \cf2 //cout<<infinity<<" "<<neg_infinity;
+\f1\i0 \cf4 \
+    \
+    \cf8 cout\cf4 <<\cf6 "Starting execution\\n"\cf4 ;\
+    \cf8 ifstream\cf4  input_file(\cf6 "input.txt"\cf4 );\
+    \cf8 ofstream\cf4  output_file;\
+    \cf8 string\cf4  type, color;\
+    
+\f2\b \cf7 float
+\f1\b0 \cf4  time_remaining;\
+    
+\f2\b \cf7 char
+\f1\b0 \cf4  board_row[\cf9 16\cf4 ];\
+    output_file.\cf10 open\cf4 (\cf6 "output.txt"\cf4 );\
+    \cf8 string\cf4  line;\
+    
+\f2\b \cf7 if
+\f1\b0 \cf4  (!input_file.\cf10 is_open\cf4 ())\
+    \{\
+        \cf8 cout\cf4 <<\cf6 "Can't open file"\cf4 ;\
+        \cf10 exit\cf4 (\cf9 1\cf4 );\
+    \}\
+    input_file>>type;\
+    \
+    \cf8 cout\cf4 <<type<<\cf10 endl\cf4 ;\
+    
+\f2\b \cf7 if
+\f1\b0 \cf4  (\cf10 strcmp\cf4 (type.\cf10 c_str\cf4 (),\cf6 "SINGLE"\cf4 ) == \cf9 0\cf4 )\
+        \cf8 cout\cf4 <<\cf6 "It is only a single move\\n"\cf4 ;\
+    
+\f2\b \cf7 else
+\f1\b0 \cf4 \
+        \cf8 cout\cf4 <<\cf6 "We are playing a Game\\n"\cf4 ;\
+    input_file>>color;\
+    
+\f2\b \cf7 char
+\f1\b0 \cf4  current_turn_color;\
+    
+\f2\b \cf7 if
+\f1\b0 \cf4  (\cf10 strcmp\cf4 (color.\cf10 c_str\cf4 (),\cf6 "BLACK"\cf4 ) == \cf9 0\cf4 )\
+    \{\
+        \cf8 cout\cf4 <<\cf6 "I am playing BLACK\\n"\cf4 ;\
+        current_turn_color = \cf9 'B'\cf4 ;\
+    \}\
+    
+\f2\b \cf7 else
+\f1\b0 \cf4 \
+    \{\
+        \cf8 cout\cf4 <<\cf6 "I am playing WHITE\\n"\cf4 ;\
+        current_turn_color = \cf9 'W'\cf4 ;\
+    \}\
+    input_file>>time_remaining;\
+    \cf8 cout\cf4 <<\cf6 "I have "\cf4 <<time_remaining<<\cf6 " time to play\\n"\cf4 ;\
+    \
+    
+\f2\b \cf7 for
+\f1\b0 \cf4  (
+\f2\b \cf7 int
+\f1\b0 \cf4  i =\cf9 0\cf4 ; i<\cf5 board_size\cf4 ; i++)\
+    \{\
+        input_file>>board_row;\
+        \
+        
+\f0\i \cf2 //cout<<"row number "<<i<<board_row<<endl;
+\f1\i0 \cf4 \
+        \cf10 strcpy\cf4 (\cf11 board\cf4 [i],board_row);\
+        \
+    \}\
+    \
+    
+\f0\i \cf2 //Given board position
+\f1\i0 \cf4 \
+    
+\f2\b \cf7 for
+\f1\b0 \cf4  (
+\f2\b \cf7 int
+\f1\b0 \cf4  i =\cf9 0\cf4 ; i<\cf5 board_size\cf4 ; i++)\
+    \{\
+        
+\f2\b \cf7 for
+\f1\b0 \cf4  (
+\f2\b \cf7 int
+\f1\b0 \cf4  j=\cf9 0\cf4 ; j<\cf5 board_size\cf4 ; j++)\
+            \cf8 cout\cf4 <<\cf11 board\cf4 [i][j];\
+        \cf8 cout\cf4 <<\cf10 endl\cf4 ;\
+    \}\
+    \
+    \cf11 absolute_move\cf4  move_play;\
+    move_play = \cf12 ALPHA_BETA_SEARCH\cf4 (\cf11 board\cf4 , current_turn_color);\
+    \
+    
+\f0\i \cf2 /*
+\f1\i0 \cf4 \
+
+\f0\i \cf2      
+\f1\i0 \cf4 \
+
+\f0\i \cf2     //Just test code if the moves are being implemented properly
+\f1\i0 \cf4 \
+
+\f0\i \cf2     vector<position> my_piece_locations;
+\f1\i0 \cf4 \
+
+\f0\i \cf2     //char opp_color;
+\f1\i0 \cf4 \
+
+\f0\i \cf2     if (current_turn_color == 'B')
+\f1\i0 \cf4 \
+
+\f0\i \cf2         opp_color = 'W';
+\f1\i0 \cf4 \
+
+\f0\i \cf2     else
+\f1\i0 \cf4 \
+
+\f0\i \cf2         opp_color = 'B';
+\f1\i0 \cf4 \
+
+\f0\i \cf2      
+\f1\i0 \cf4 \
+
+\f0\i \cf2      
+\f1\i0 \cf4 \
+
+\f0\i \cf2     cout<<"My locations are\\n";
+\f1\i0 \cf4 \
+
+\f0\i \cf2     for (int i =0; i<board_size; i++)
+\f1\i0 \cf4 \
+
+\f0\i \cf2     \{
+\f1\i0 \cf4 \
+
+\f0\i \cf2         for (int j=0; j<board_size; j++)
+\f1\i0 \cf4 \
+
+\f0\i \cf2         \{
+\f1\i0 \cf4 \
+
+\f0\i \cf2             if(board[i][j] == current_turn_color)
+\f1\i0 \cf4 \
+
+\f0\i \cf2             \{
+\f1\i0 \cf4 \
+
+\f0\i \cf2                 position location;
+\f1\i0 \cf4 \
+
+\f0\i \cf2                 location.X_pos = j;
+\f1\i0 \cf4 \
+
+\f0\i \cf2                 location.Y_pos = i;
+\f1\i0 \cf4 \
+
+\f0\i \cf2                 my_piece_locations.push_back(location);
+\f1\i0 \cf4 \
+
+\f0\i \cf2                 location.print();
+\f1\i0 \cf4 \
+
+\f0\i \cf2                 cout<<endl;
+\f1\i0 \cf4 \
+
+\f0\i \cf2             \}
+\f1\i0 \cf4 \
+
+\f0\i \cf2         \}
+\f1\i0 \cf4 \
+
+\f0\i \cf2     \}
+\f1\i0 \cf4 \
+
+\f0\i \cf2     position initial_pos;
+\f1\i0 \cf4 \
+
+\f0\i \cf2     
+\f1\i0 \cf4 \
+
+\f0\i \cf2     vector<absolute_move> All_piece_moves;
+\f1\i0 \cf4 \
+
+\f0\i \cf2     All_piece_moves = valid_move(my_piece_locations,current_turn_color);
+\f1\i0 \cf4 \
+
+\f0\i \cf2     if(All_piece_moves.empty())
+\f1\i0 \cf4 \
+
+\f0\i \cf2     \{
+\f1\i0 \cf4 \
+
+\f0\i \cf2         cout<<"This thing is funcking empty";
+\f1\i0 \cf4 \
+
+\f0\i \cf2     \}
+\f1\i0 \cf4 \
+
+\f0\i \cf2     //actions.insert(actions.end(),list_move.begin(),list_move.end());
+\f1\i0 \cf4 \
+
+\f0\i \cf2     
+\f1\i0 \cf4 \
+
+\f0\i \cf2     char new_board[board_size][board_size];
+\f1\i0 \cf4 \
+
+\f0\i \cf2     cout<<"Printing all possible moves for that board state";
+\f1\i0 \cf4 \
+
+\f0\i \cf2     for (vector<absolute_move>::iterator it = All_piece_moves.begin() ; it != All_piece_moves.end(); ++it)
+\f1\i0 \cf4 \
+
+\f0\i \cf2     \{
+\f1\i0 \cf4 \
+
+\f0\i \cf2         it->print_absolute_move();
+\f1\i0 \cf4 \
+
+\f0\i \cf2         if(initial_pos.isEqual(it->starting_pos))
+\f1\i0 \cf4 \
+
+\f0\i \cf2          \{
+\f1\i0 \cf4 \
+
+\f0\i \cf2          for (int i =0; i<board_size; i++)
+\f1\i0 \cf4 \
+
+\f0\i \cf2          \{
+\f1\i0 \cf4 \
+
+\f0\i \cf2          //cout<<"row number "<<i<<board_row<<endl;
+\f1\i0 \cf4 \
+
+\f0\i \cf2          strcpy(new_board[i],board[i]);
+\f1\i0 \cf4 \
+
+\f0\i \cf2          \}
+\f1\i0 \cf4 \
+
+\f0\i \cf2          \}
+\f1\i0 \cf4 \
+
+\f0\i \cf2     
+\f1\i0 \cf4 \
+
+\f0\i \cf2         for (int i =0; i<board_size; i++)
+\f1\i0 \cf4 \
+
+\f0\i \cf2         \{
+\f1\i0 \cf4 \
+
+\f0\i \cf2             //cout<<"row number "<<i<<board_row<<endl;
+\f1\i0 \cf4 \
+
+\f0\i \cf2             strcpy(new_board[i],board[i]);
+\f1\i0 \cf4 \
+
+\f0\i \cf2         \}
+\f1\i0 \cf4 \
+
+\f0\i \cf2         new_board[it->starting_pos.Y_pos][it->starting_pos.X_pos] = '.';
+\f1\i0 \cf4 \
+
+\f0\i \cf2         new_board[it->final_pos.Y_pos][it->final_pos.X_pos] = current_turn_color;
+\f1\i0 \cf4 \
+
+\f0\i \cf2         cout<<"Board position after move\\n";
+\f1\i0 \cf4 \
+
+\f0\i \cf2         for (int i =0; i<board_size; i++)
+\f1\i0 \cf4 \
+
+\f0\i \cf2         \{
+\f1\i0 \cf4 \
+
+\f0\i \cf2             for (int j=0; j<board_size; j++)
+\f1\i0 \cf4 \
+
+\f0\i \cf2                 cout<<new_board[i][j];
+\f1\i0 \cf4 \
+
+\f0\i \cf2             cout<<endl;
+\f1\i0 \cf4 \
+
+\f0\i \cf2         \}
+\f1\i0 \cf4 \
+
+\f0\i \cf2     \}
+\f1\i0 \cf4 \
+
+\f0\i \cf2     cout << '\\n';
+\f1\i0 \cf4 \
+
+\f0\i \cf2     
+\f1\i0 \cf4 \
+
+\f0\i \cf2     */
+\f1\i0 \cf4 \
+    \
+    input_file.\cf10 close\cf4 ();\
+    output_file.\cf10 close\cf4 ();\
+    
+\f2\b \cf7 return
+\f1\b0 \cf4  \cf9 0\cf4 ;\
+\}\
+}
